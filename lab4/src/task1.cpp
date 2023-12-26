@@ -1,5 +1,21 @@
 #include "task.h"
 
+double task1::phi_1(double x) {
+    return (20 * log(2 + cos(x)) - x - 10 + x * x * x) / (x * x);
+}
+
+double task1::phi_2(double x) {
+    return x - 1. / 20 * (20 * log(2 + cos(x)) - x - 10);
+}
+
+double task1::phi_3(double x) {
+    return x + exp(-x) / x * (20 * log(2 + cos(x)) - x - 10);
+}
+
+double task1::phi_4(double x) {
+    return x - x / 100. * (20 * log(2 + cos(x)) - x - 10);
+}
+
 double task1::foo_task1(double x) {
     return 20 * log(2 + cos(x)) - x - 10;
 }
@@ -31,6 +47,7 @@ void task1::main_task1() {
     int N = 11;
     double h = (b - a) / N;
     double x_cur = a;
+    bool check=1;
     while (x_cur < b) {
         double x0 = x_cur;
         double x1 = x_cur + h;
@@ -40,12 +57,39 @@ void task1::main_task1() {
         SEM(x0, x1, n_sem);
         CHM(x0, x1, n_chm);
         x_cur += h;
+        auto x = SIM(x0, x1, phi_1);
+        if (x0 <= x.first && x.first <= x1 && check) {
+            cout << "Метод простых итераций:" << endl;
+            cout << "Корень: " << fixed << setprecision(9) << x.first << endl;
+            cout << "Количество итераций: " << x.second << endl;
+            cout << "----------------\n";
+            continue;
+        }
+        x = SIM(x0, x1, phi_2);
+        if (x0 <= x.first && x.first <= x1 && check) {
+            cout << "Метод простых итераций:" << endl;
+            cout << "Корень: " << fixed << setprecision(9) << x.first << endl;
+            cout << "Количество итераций: " << x.second << endl;
+            cout << "----------------\n";
+            continue;
+        }
+        x = SIM(x0, x1, phi_3);
+        if (x0 <= x.first && x.first <= x1 && check) {
+            cout << "Метод простых итераций:" << endl;
+            cout << "Корень: " << fixed << setprecision(9) << x.first << endl;
+            cout << "Количество итераций: " << x.second << endl;
+            cout << "----------------\n";
+            continue;
+        }
+        x = SIM(x0, x1, phi_4);
+        if (x0 <= x.first && x.first <= x1 && check) {
+            cout << "Метод простых итераций:" << endl;
+            cout << "Корень: " << fixed << setprecision(9) << x.first << endl;
+            cout << "Количество итераций: " << x.second << endl;
+            cout << "----------------\n";
+        }
+
     }
-    cout << "Корни:\n";
-    for (auto i: answer) {
-        cout << i << " ";
-    }
-    cout << endl;
 }
 
 void task1::BIM(double a, double b, int &num_it) {
@@ -124,51 +168,19 @@ void task1::CHM(double a, double b, int &num_it) {
     }
 }
 
-
-//// Метод простых итераций
-//void task1::SIM(double a, int &n_num) {
-//    double x0 = a;
-//    double x1 = x2_foo_task2(x0);
-//    while (abs(x1 - x0) > epsilon) {
-//        x0 = x1;
-//        x1 = x2_foo_task2(x0);
-//        n_num++;
-//    }
-//    cout << "Метод простых итераций:" << endl;
-//    cout << "Корень: " << x1 << fixed << setprecision(9) << endl;
-//    cout << "Количество итераций: " << n_num << endl;
-//    cout << "----------------\n";
-//    } else if ((dF2(a) < 1) && (dF2(b) < 1)) {
-//        int num_it = 0;
-//        double x0 = b;
-//        double x1 = F2(x0);
-//        //  смотрим пока разница вида f(f....(n-1)...f(b)...) f(f....(n)...f(b)...) не сойдется
-//        while (abs(x1 - x0) > delta) {
-//            x0 = x1;
-//            x1 = F2(x0);
-//            num_it++;
-//        }
-//        cout << "Метод простых итераций:" << endl;
-//        cout << "f(x) = 6/x-2/x^2-1/x^3" << endl;
-//        cout << "Корень: " << fixed << setprecision(9) << x1 << endl;
-//        cout << "Количество итераций: " << num_it << endl;
-//        cout << "----------------\n";
-//    } else if ((dF3(a) < 1) && (dF3(b) < 1)) {
-//        int num_it = 0;
-//        double x0 = b;
-//        double x1 = F3(x0);
-//        //  смотрим пока разница вида f(f....(n-1)...f(b)...) f(f....(n)...f(b)...) не сойдется
-//        while (abs(x1 - x0) > delta) {
-//            x0 = x1;
-//            x1 = F3(x0);
-//            num_it++;
-//        }
-//        cout << "Метод простых итераций:" << endl;
-//        cout << "f(x) = x^3/6+1/3+1/6x" << endl;
-//        cout << "Корень: " << fixed << setprecision(9) << x1 << endl;
-//        cout << "Количество итераций: " << num_it << endl;
-//        cout << "----------------\n";
-//    }
-//}
-
+//метод простых итераций
+pair<double, int> task1::SIM(double a, double b, std::function<double(const double &)> f) {
+    if (a > b) {
+        std::swap(a, b);
+    }
+    double x = (a + b) / 2;
+    double x_next = f(x);
+    int i = 0;
+    while (abs(x_next - x) > epsilon) {
+        x = x_next;
+        x_next = f(x);
+        i++;
+    }
+    return {x_next, i};
+}
 

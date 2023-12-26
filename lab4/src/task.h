@@ -31,7 +31,7 @@ namespace task1 {
 
     void CHM(double a, double b, int &num_it);
 
-    void SIM(double a, int &n_num);
+    pair<double,int> SIM(double a, double b, std::function<double(const double&)> f);
 
     void main_task1();
 
